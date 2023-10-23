@@ -1,33 +1,25 @@
 name: run-tests-until-end-of-time
 on:
   push:
-    branches:
-      - main
+    branches:  main
   pull_request:
-    branches:
-      - main
+    branches: main
 
 jobs:
-  tests:
-    name: Run tests
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout and setup
-        uses: actions/checkout@v2
-
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v3
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
         with:
-          java-version: '19.0.1'
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
 
-      - name: Install Maven
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y maven
-
-      - name: Install dependencies
-        run: |
-          mvn clean install 
-
-      - name: Run tests with JUnit
-        run: java -cp path_to_test_classes:path_to_classes junit.textui.TestRunner LeapyearTest -r w
+      - name: Run Test
+        run: mvn test
