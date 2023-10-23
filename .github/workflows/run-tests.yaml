@@ -30,4 +30,4 @@ jobs:
           mvn clean install 
 
       - name: Run tests with JUnit
-        run: poetry run maventest -r w
+        run: java -cp path_to_test_classes:path_to_classes junit.textui.TestRunner LeapyearTest -r w
