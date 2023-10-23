@@ -1,0 +1,33 @@
+name: run-tests-until-end-of-time
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout and setup
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '19.0.1'
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y maven
+
+      - name: Install dependencies
+        run: |
+          mvn clean install 
+
+      - name: Run tests with JUnit
+        run: poetry run maventest -r w
